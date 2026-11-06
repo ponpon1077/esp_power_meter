@@ -124,10 +124,11 @@ esp32_power_meter/
 │       ├── include/
 │       │   └── iot_service.h
 │       └── iot_service.c
-└── main/
-    ├── idf_component.yml         # Dépendance gérée (LittleFS)
-    ├── CMakeLists.txt            # Enregistrement du composant main
-    ├── main.c                    # Mesures, régulation optocoupleur et points d'accès API
+├── main/
+|   ├── idf_component.yml         # Dépendance gérée (LittleFS)
+|   ├── CMakeLists.txt            # Enregistrement du composant main
+|   └── main.c                    # Mesures, régulation optocoupleur et points d'accès API
+└── web/
     ├── index.html                # Page HTML du tableau de bord
     ├── style.css                 # Feuilles de style
     └── script.js                 # Logique JavaScript et graphiques Chart.js
