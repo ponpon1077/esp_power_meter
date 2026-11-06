@@ -1,0 +1,156 @@
+:root {
+  --bg-color: #f4f6f9;
+  --card-bg: #ffffff;
+  --primary: #0288d1;
+  --text-main: #333333;
+  --text-muted: #666666;
+  --border: #e0e0e0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #1a237e;
+  text-align: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.card h2 {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Accordéon */
+.accordion {
+  padding: 0;
+  overflow: hidden;
+  text-align: left;
+}
+
+.accordion-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  background-color: #fafafa;
+}
+
+.accordion-header:hover {
+  background-color: #f0f4f8;
+}
+
+.accordion-header h2 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.chevron {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  transition: transform 0.25s ease;
+}
+
+.accordion.open .chevron {
+  transform: rotate(180deg);
+}
+
+.accordion-body {
+  display: none;
+  padding: 16px 20px 20px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.accordion.open .accordion-body {
+  display: block;
+}
+
+select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 0.9rem;
+}
+
+.circuit-block { margin: 10px 0; }
+.circuit-title { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+.power-value { font-size: 2.4rem; font-weight: 700; color: var(--primary); }
+.unit { font-size: 1.1rem; color: var(--text-muted); font-weight: 400; }
+.sub-info { font-size: 0.9rem; color: var(--text-muted); }
+.divider { border: 0; height: 1px; background: var(--border); margin: 12px 0; }
+.voltage-info { font-size: 1rem; font-weight: 600; margin-bottom: 8px; color: #37474f; }
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.error { background-color: #ffebee; color: #c62828; }
+
+.chart-container {
+  position: relative;
+  height: 220px;
+  width: 100%;
+}
+
+.form-group { margin-bottom: 12px; text-align: left; }
+label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; }
+.help-text { color: #888; font-size: 0.75rem; display: block; margin-top: 4px; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+button:hover { background-color: #0277bd; }
