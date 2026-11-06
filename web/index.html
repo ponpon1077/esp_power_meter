@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP32 - Moniteur & Historique</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <h1>⚡ ESP32 Power Meter Dual</h1>
+
+  <div class="container">
+    
+    <!-- Carte Mesures Instantanées -->
+    <div class="card">
+      <h2>Puissance Instantanée</h2>
+      <div class="circuit-block">
+        <span class="circuit-title">Circuit 1</span>
+        <div class="power-value"><span id="p1">0.00</span> <span class="unit">W</span></div>
+        <div class="sub-info"><span id="i1">0.00</span> A</div>
+      </div>
+      <hr class="divider">
+      <div class="circuit-block">
+        <span class="circuit-title">Circuit 2</span>
+        <div class="power-value"><span id="p2">0.00</span> <span class="unit">W</span></div>
+        <div class="sub-info"><span id="i2">0.00</span> A</div>
+      </div>
+      <div class="voltage-info">Tension : <span id="v">0.0</span> V</div>
+      
+      <div class="circuit-block" style="margin-top: 15px;">
+        <span class="circuit-title">Relais Optocoupleur</span>
+        <div style="margin-top: 5px;">
+          <span id="optoBadge" class="status-badge">Inactif</span>
+        </div>
+      </div>
+      
+      <div style="margin-top: 15px;">
+        <span id="status" class="status-badge">Connexion...</span>
+      </div>
+    </div>
+
+    <!-- Carte Graphique Historique (Escamotable) -->
+    <div class="card accordion">
+      <div class="accordion-header" onclick="toggleCard(this)">
+        <h2>📈 Historique</h2>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+          <select id="periodSelect">
+            <option value="12h">12 Heures</option>
+            <option value="7d">7 Jours</option>
+            <option value="12m">12 Mois</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <canvas id="powerChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte Configuration Relais Optocoupleur (Escamotable) -->
+    <div class="card accordion">
+      <div class="accordion-header" onclick="toggleCard(this)">
+        <h2>⚡ Configuration Relais Optocoupleur</h2>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="accordion-body">
+        <form action="/opto" method="POST">
+          <div class="form-group">
+            <label for="th_on">Seuil d'activation (Watts - négatif pour injection)</label>
+            <input type="number" step="0.1" id="th_on" name="th_on" placeholder="Ex: -50.0" required>
+            <small class="help-text">Active le relais si P &lt; seuil (ex: -50W = injection &gt; 50W)</small>
+          </div>
+          <div class="form-group" style="margin-top:10px;">
+            <label for="th_off">Seuil de désactivation (Watts)</label>
+            <input type="number" step="0.1" id="th_off" name="th_off" placeholder="Ex: -10.0" required>
+            <small class="help-text">Désactive le relais si P &gt; seuil (ex: -10W)</small>
+          </div>
+          <button type="submit">Enregistrer les Seuils</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Carte Configuration Wi-Fi (Escamotable) -->
+    <div class="card accordion">
+      <div class="accordion-header" onclick="toggleCard(this)">
+        <h2>📶 Configuration Wi-Fi</h2>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="accordion-body">
+        <form action="/wifi" method="POST">
+          <div class="form-group">
+            <label for="ssid">SSID Wi-Fi</label>
+            <input type="text" id="ssid" name="ssid" placeholder="Ex: MonReseau" required>
+          </div>
+          <div class="form-group">
+            <label for="pass">Mot de passe</label>
+            <input type="password" id="pass" name="pass" placeholder="••••••••" required>
+          </div>
+          <button type="submit">Enregistrer Wi-Fi</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Carte Configuration MQTT (Escamotable) -->
+    <div class="card accordion">
+      <div class="accordion-header" onclick="toggleCard(this)">
+        <h2>📡 Configuration MQTT</h2>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="accordion-body">
+        <form action="/mqtt" method="POST">
+          <div class="form-group">
+            <label for="mqtt_uri">URI du Broker</label>
+            <input type="text" id="mqtt_uri" name="mqtt_uri" placeholder="mqtt://192.168.1.50:1883" required>
+          </div>
+          <div class="form-group">
+            <label for="mqtt_topic">Topic racine</label>
+            <input type="text" id="mqtt_topic" name="mqtt_topic" placeholder="maison/energie" required>
+          </div>
+          <button type="submit">Enregistrer MQTT</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
