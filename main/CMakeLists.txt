@@ -5,8 +5,9 @@ idf_component_register(
         "."
     REQUIRES 
         iot_service 
-        driver 
-        freertos
+        esp_driver_gpio 
+        esp_driver_i2c 
+        nvs_flash       freertos
 )
 
 # Crée l'image LittleFS à partir du dossier web/ et la flashe sur la partition 'storage'

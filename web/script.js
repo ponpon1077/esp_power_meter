@@ -12,7 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const statusEl = document.getElementById("status");
   const optoBadge = document.getElementById("optoBadge");
   const periodSelect = document.getElementById("periodSelect");
-
+  const btnUploadWeb = document.getElementById("btnUploadWeb");
+  const webFilesInput = document.getElementById("webFiles");
+  const uploadStatus = document.getElementById("uploadStatus");
+  const littlefsFiles = document.getElementById("littlefsFiles");
+  const btnUploadOta = document.getElementById("btnUploadOta");
+  const otaFileInput = document.getElementById("otaFile");
+  const otaStatus = document.getElementById("otaStatus");
   const ctx = document.getElementById("powerChart").getContext("2d");
   const powerChart = new Chart(ctx, {
     type: "line",
@@ -84,6 +90,100 @@ document.addEventListener("DOMContentLoaded", () => {
         powerChart.update();
       })
       .catch(() => {});
+  }
+
+  function loadLittleFsFiles() {
+    fetch("/api/files")
+      .then((res) => res.json())
+      .then((files) => {
+        littlefsFiles.innerHTML = files
+          .map((f) => `<li>• <strong>${f.name}</strong> (${(f.size / 1024).toFixed(1)} Ko)</li>`)
+          .join("");
+      })
+      .catch(() => {
+        littlefsFiles.innerHTML = "<li>Impossible de lister les fichiers</li>";
+      });
+  }
+
+  if (btnUploadWeb) {
+    btnUploadWeb.addEventListener("click", async () => {
+      if (!webFilesInput.files.length) {
+        uploadStatus.innerText = "Veuillez sélectionner au moins un fichier.";
+        uploadStatus.style.color = "#c62828";
+        return;
+      }
+
+      btnUploadWeb.disabled = true;
+      for (const file of webFilesInput.files) {
+        uploadStatus.innerText = `Envoi de ${file.name}...`;
+        uploadStatus.style.color = "#0288d1";
+
+        try {
+          const res = await fetch(`/upload?file=${encodeURIComponent(file.name)}`, {
+            method: "POST",
+            body: file
+          });
+          if (!res.ok) throw new Error();
+        } catch {
+          uploadStatus.innerText = `Erreur lors de l'envoi de ${file.name}.`;
+          uploadStatus.style.color = "#c62828";
+          btnUploadWeb.disabled = false;
+          return;
+        }
+      }
+
+      uploadStatus.innerText = "Mise à jour réussie ! Actualisez la page.";
+      uploadStatus.style.color = "#2e7d32";
+      btnUploadWeb.disabled = false;
+      webFilesInput.value = "";
+      loadLittleFsFiles();
+    });
+
+    loadLittleFsFiles();
+  }
+
+  if (btnUploadOta) {
+    btnUploadOta.addEventListener("click", () => {
+      const file = otaFileInput.files[0];
+      if (!file || !file.name.endsWith(".bin")) {
+        otaStatus.innerText = "Veuillez sélectionner un fichier .bin valide.";
+        otaStatus.style.color = "#c62828";
+        return;
+      }
+
+      btnUploadOta.disabled = true;
+      otaStatus.style.color = "#0288d1";
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/ota", true);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
+          otaStatus.innerText = `Téléversement en cours : ${pct}%...`;
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          otaStatus.innerText = "Firmware installé ! Redémarrage de l'ESP32...";
+          otaStatus.style.color = "#2e7d32";
+          setTimeout(() => location.reload(), 6000);
+        } else {
+          otaStatus.innerText = `Erreur OTA : ${xhr.responseText || xhr.status}`;
+          otaStatus.style.color = "#c62828";
+          btnUploadOta.disabled = false;
+        }
+      };
+
+      xhr.onerror = () => {
+        otaStatus.innerText = "Erreur réseau pendant le transfert.";
+        otaStatus.style.color = "#c62828";
+        btnUploadOta.disabled = false;
+      };
+
+      xhr.send(file);
+    });
   }
 
   fetch("/api/config")

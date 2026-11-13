@@ -126,6 +126,42 @@
       </div>
     </div>
 
+    <!-- mise à jour interface Web (Escamotable) -->
+    <div class="card accordion">
+      <div class="accordion-header" onclick="toggleCard(this)">
+        <h2>🛠️ Mise à jour Interface Web</h2>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="form-group">
+          <label for="webFiles">Fichiers web (index.html, script.js, style.css)</label>
+          <input type="file" id="webFiles" multiple>
+          <span class="help-text">Sélectionnez un ou plusieurs fichiers à remplacer sur LittleFS.</span>
+        </div>
+        <button type="button" id="btnUploadWeb">Envoyer les fichiers</button>
+        <p id="uploadStatus" class="help-text" style="margin-top:8px; font-weight:600;"></p>
+        <hr class="divider">
+        <div class="form-group">
+          <label>Fichiers présents sur l'ESP32 :</label>
+          <ul id="littlefsFiles" style="list-style:none; font-size:0.85rem; color:#555; margin-top:4px;">
+            <li>Chargement...</li>
+          </ul>
+        </div>
+	<hr class="divider">
+        <div class="form-group">
+          <label for="otaFile">Mise à jour Firmware (.bin)</label>
+          <input type="file" id="otaFile" accept=".bin">
+          <span class="help-text">Sélectionnez le fichier <code>build/esp32_power_meter.bin</code>.</span>
+        </div>
+        <button type="button" id="btnUploadOta" style="background-color: #e65100;">Flasher le Firmware (OTA)</button>
+        <p id="otaStatus" class="help-text" style="margin-top:8px; font-weight:600;"></p>
+
+      </div>
+    </div>
+
+    <!-- mise à jour OTA (Escamotable) -->
+    
+
   </div>
 
   <script src="script.js"></script>

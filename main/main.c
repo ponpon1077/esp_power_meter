@@ -231,7 +231,7 @@ static esp_err_t api_history_handler(httpd_req_t *req) {
         httpd_resp_send_chunk(req, "],\"ts\":[", HTTPD_RESP_USE_STRLEN);
 
         for (int i = 0; i < target->count; i++) {
-            snprintf(buf, sizeof(buf), "%ld%s", (long)target->ts[i], (i == target->count - 1) ? "" : ",");
+            snprintf(buf, sizeof(buf), "%lld%s", (long long)target->ts[i], (i == target->count - 1) ? "" : ",");
             httpd_resp_send_chunk(req, buf, HTTPD_RESP_USE_STRLEN);
         }
         xSemaphoreGive(data_mutex);
@@ -359,6 +359,7 @@ void app_main(void) {
     iot_service_register_http_uri(&uri_api_data);
     iot_service_register_http_uri(&uri_api_hist);
     iot_service_register_http_uri(&uri_opto_cfg);
+    iot_service_register_fallback_handler();
 
     // Tâche d'échantillonnage temps réel épinglée sur Cœur 1
     xTaskCreatePinnedToCore(
@@ -369,5 +370,5 @@ void app_main(void) {
         5,
         NULL,
         1
-    );
+	);
 }

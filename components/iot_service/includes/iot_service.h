@@ -58,7 +58,9 @@ bool iot_service_mqtt_is_connected(void);
  * 
  * @return Chaîne constante vers le topic de base (ex: "maison/energie").
  */
-const char* iot_service_get_mqtt_base_topic(void);
+const char *iot_service_get_mqtt_base_topic(void);
+
+esp_err_t iot_service_register_fallback_handler(void);
 
 #ifdef __cplusplus
 }
